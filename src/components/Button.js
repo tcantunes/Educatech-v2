@@ -1,14 +1,14 @@
 import React from 'react';
 
-const Button = ({ text }) => {
+const Button = ({ text, onClick, style }) => {
   return (
-    <button style={styles.button}>
+    <button onClick={onClick} style={{ ...defaultStyles.button, ...style }}>
       {text}
     </button>
   );
 };
 
-const styles = {
+const defaultStyles = {
   button: {
     backgroundColor: '#d7bf5e',
     border: 'none',

@@ -1,10 +1,22 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Button from '../components/Button';
 import Footer from '../components/Footer';
 import image from '../assets/pagina-inicial.png';
 
 const Home = () => {
+  const navigate = useNavigate();
+
+  const loginRedirect = () => {
+    navigate('/login');
+  };
+
+  const registerRedirect = () => {
+    navigate('/register');
+  };
+
+
   return (
     <div style={styles.container}>
       <Navbar />
@@ -14,8 +26,8 @@ const Home = () => {
           <h2 style={styles.subtitle}>Educação para a Terceira Idade</h2>
           <p style={styles.description}>Cursos de tecnologia para a terceira idade</p>
           <div style={styles.buttonContainer}>
-            <Button text="Entre Agora" />
-            <Button text="Cadastre-se" />
+            <Button text="Entre Agora" onClick={loginRedirect} />
+            <Button text="Cadastre-se" onClick={registerRedirect} />
           </div>
         </div>
         <div style={styles.imageContainer}>
