@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Button from '../components/Button';
@@ -6,9 +6,57 @@ import Footer from '../components/Footer';
 
 const Register = () => {
   const navigate = useNavigate();
+  
+  const [formData, setFormData] = useState({
+    name: '',
+    city: '',
+    state: '',
+    email: '',
+    password: '',
+    confirmPassword: ''
+  });
 
-  const handleConfirm = () => {
-    console.log('Cadastro confirmado');
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleConfirm = async (e) => {
+    e.preventDefault();
+    const { name, city, state, email, password, confirmPassword } = formData;
+
+    if (password !== confirmPassword) {
+      alert('As senhas não coincidem!');
+      return;
+    }
+
+    try {
+      const response = await fetch('https://educatech-backend-7yo9.onrender.com/api/auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name,
+          city,
+          state,
+          email,
+          password,
+          confirmPassword
+        }),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert('Cadastro realizado com sucesso!');
+        navigate('/login');
+      } else {
+        alert(`Erro: ${data.message}`);
+      }
+    } catch (error) {
+      console.error('Erro ao cadastrar:', error);
+      alert('Erro ao cadastrar');
+    }
   };
 
   return (
@@ -26,30 +74,73 @@ const Register = () => {
           <h2 style={styles.title}>BEM-VINDO À EDUCATECH!</h2>
           <p style={styles.subtitle}>Insira seus dados para criar sua conta:</p>
 
-          <form style={styles.form}>
+          <form style={styles.form} onSubmit={handleConfirm}>
             <label style={styles.label}>Nome Completo</label>
-            <input type="text" placeholder="Digite seu nome aqui" style={styles.input} />
+            <input
+              type="text"
+              name="name"
+              placeholder="Digite seu nome aqui"
+              value={formData.name}
+              onChange={handleChange}
+              style={styles.input}
+            />
 
             <label style={styles.label}>Cidade</label>
-            <input type="text" placeholder="Digite sua cidade aqui" style={styles.input} />
+            <input
+              type="text"
+              name="city"
+              placeholder="Digite sua cidade aqui"
+              value={formData.city}
+              onChange={handleChange}
+              style={styles.input}
+            />
 
             <label style={styles.label}>Estado</label>
-            <input type="text" placeholder="Digite seu estado aqui" style={styles.input} />
+            <input
+              type="text"
+              name="state"
+              placeholder="Digite seu estado aqui"
+              value={formData.state}
+              onChange={handleChange}
+              style={styles.input}
+            />
 
             <label style={styles.label}>Email</label>
-            <input type="email" placeholder="Digite seu email aqui" style={styles.input} />
+            <input
+              type="email"
+              name="email"
+              placeholder="Digite seu email aqui"
+              value={formData.email}
+              onChange={handleChange}
+              style={styles.input}
+            />
 
             <label style={styles.label}>Senha</label>
-            <input type="password" placeholder="Digite sua senha aqui" style={styles.input} />
+            <input
+              type="password"
+              name="password"
+              placeholder="Digite sua senha aqui"
+              value={formData.password}
+              onChange={handleChange}
+              style={styles.input}
+            />
 
             <label style={styles.label}>Confirme sua senha</label>
-            <input type="password" placeholder="Digite novamente sua senha aqui" style={styles.input} />
-            <div style={styles.containerButton}>
-            <Button
-              text="Confirmar"
-              onClick={handleConfirm}
-              style={styles.confirmButton}
+            <input
+              type="password"
+              name="confirmPassword"
+              placeholder="Digite novamente sua senha aqui"
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              style={styles.input}
             />
+
+            <div style={styles.containerButton}>
+              <Button
+                text="Confirmar"
+                style={styles.confirmButton}
+                onClick={handleConfirm}
+              />
             </div>
           </form>
         </div>
@@ -127,8 +218,8 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    flexDirection: 'column'
-  }, 
+    flexDirection: 'column',
+  },
 };
 
 export default Register;
